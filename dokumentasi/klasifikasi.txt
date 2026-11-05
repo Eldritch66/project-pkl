@@ -1,0 +1,42 @@
+Code        Nama
+000         Umum
+300         Keamanan dan Ketertiban
+800         Kepegawaiaan
+900         Keuangan
+020         Peralatan
+030         Kekayaan Daerah
+070         Penelitian
+090         Perjalanan Dinas
+100         Pemerintahan
+110         Pemerintah Pusat
+200         Politik
+220         Org. Kemasyarakatan
+260         Organisasi Wanita
+270         Pemilihan Umum
+280         Komisi Pemilihan Umum
+300         Keamanan/Ketertiban
+310	        Pertahanan
+320	        Kemiliteran
+330	        Keamanan
+340	        Perlindungan Masyarakat
+350	        Kejahatan
+360	        Bencana
+370	        Kecelakaan
+400	        KESEJAHTERAAN RAKYAT
+410	        Pendidikan
+420	        Kebudayaan
+430	        Kesehatan
+440	        Agama
+450	        Sosial
+460	        Kependudukan
+470	        Media Massa
+500	        PEREKONOMIAN
+510	        Perdagangan
+520	        Pertanian
+530	        Perindustrian
+540	        Pertambangan Kesamuderaan
+550	        Perhubungan
+560	        Tenaga Kerja
+570	        Permodalan
+580	        Perbankan/Moneter
+590	        Agraria
