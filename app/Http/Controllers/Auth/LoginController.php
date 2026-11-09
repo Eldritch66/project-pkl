@@ -4,33 +4,42 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
+    public function show()
+    {
+        return view('auth.login');
+    }
+
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $expected = (string) config('app.site_password');
-
-        if (! hash_equals($expected, (string) $request->input('password'))) {
+        if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
-                'password' => 'Password salah.',
+                'username' => 'Username atau password salah.',
             ]);
         }
 
         $request->session()->regenerate();
-        $request->session()->put('gate_authenticated', true);
 
-        return redirect()->intended(route('home'));
+        $default = $request->user()->isPetugas()
+            ? route('home')
+            : route('sk.index');
+
+        return redirect()->intended($default);
     }
 
     public function logout(Request $request)
     {
-        $request->session()->forget('gate_authenticated');
+        Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

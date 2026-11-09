@@ -54,6 +54,7 @@ KPWK). Tech stack yang direncanakan: PHP/Laravel, MySQL, server Linux, domain
 | 19 | Page daftar surat dengan No Urut, Jenis Surat, Tgl Terima, No Surat | Kolom daftar surat diganti; field `nomor_surat` dan jenis surat "Surat Masuk" ditambahkan | Selesai |
 | 20 | Root page berisi profil Bakesbangpol + menu Daftar Surat di navigasi | Root `/` menjadi halaman profil instansi; navigasi atas berisi Beranda, Entri Surat, Daftar Surat | Selesai |
 | 21 | Klik surat di daftar untuk langsung masuk Entri Surat | No. Urut di daftar menjadi link edit; form terisi otomatis dan tombol berubah menjadi "Simpan Perubahan" | Selesai |
+| 22 | Fitur mencatat instruksi lisan "diberikan ke Pak ..." | Ditambah field Diteruskan Kepada; tampil di daftar dan lembar cetak | Selesai |
 
 ---
 
@@ -143,12 +144,14 @@ body.locked main {
 
 ## 6. Tabel `entri_surat`
 
-Dibuat lewat dua migration:
+Dibuat lewat beberapa migration:
 
 - `2026_11_04_000001_create_entri_surat_table.php`
 - `2026_11_04_000002_add_ringkasan_to_entri_surat_table.php`
 - `2026_11_04_000004_expand_kelompok_surat_on_entri_surat_table.php`
 - `2026_11_04_000005_add_nomor_surat_to_entri_surat_table.php`
+- `2026_11_04_000006_add_disposisi_to_entri_surat_table.php`
+- `2026_11_04_000007_remove_extra_disposisi_columns_from_entri_surat_table.php`
 
 | Kolom | Tipe | Keterangan |
 |-------|------|------------|
@@ -172,6 +175,7 @@ Dibuat lewat dua migration:
 | `kelompok_surat` | varchar(50) | `berita_acara`, `biasa`, `cuti`, `instruksi`, `naskah_perjanjian_hibah_daerah`, `proposal`, `surat_edaran` |
 | `kode_berkas` | varchar(4) | maksimal 4 digit |
 | `nama_berkas` | varchar(255) | |
+| `diteruskan_kepada` | varchar(255), nullable | Penerima disposisi (input manual) |
 | `created_at`, `updated_at` | timestamp | |
 
 **Nomor urut otomatis** dihitung di dalam transaksi:
@@ -225,6 +229,7 @@ Urutan field:
 | 13 | Kelompok Surat | Select: Berita Acara, Biasa, Cuti, Instruksi, Naskah Perjanjian Hibah Daerah, Proposal, Surat Edaran | `kelompok_surat` |
 | 14 | Kode / Nama Berkas | Text max 4 digit + Text | `kode_berkas`, `nama_berkas` |
 | 15 | Ringkasan | Textarea (full width) | `ringkasan` |
+| 16 | Diteruskan Kepada | Text max 255, opsional | `diteruskan_kepada` |
 
 **Catatan:** opsi dropdown di atas adalah asumsi awal dan mudah diubah.
 
@@ -234,6 +239,12 @@ Urutan field:
 - `min-height: 160px`
 - `padding: 10px 12px` agar teks mepet ke border atas
 - `resize: vertical`
+
+**Diteruskan Kepada (opsional):**
+- Mencatat tujuan/instruksi lisan saat surat diterima, misalnya
+  "diberikan ke Pak ...".
+- Input teks manual, maks. 255 karakter, boleh kosong.
+- Nilai ikut tampil di Daftar Surat dan Lembar Disposisi.
 
 **Klasifikasi otomatis:**
 - Input kode (`klasifikasi_kode`) diketik maksimal 4 digit.
@@ -254,6 +265,7 @@ Urutan field:
 - `klasifikasi_kode`: `digits_between:1,4` + `exists:klasifikasi,kode`
 - `kode_berkas`: `digits_between:1,4`
 - jumlah lampiran/halaman: integer 0–9999
+- `diteruskan_kepada`: nullable, string max 255
 
 Setelah simpan: redirect ke `/entri-surat/{id}/cetak` dengan pesan
 `Surat nomor urut X berhasil disimpan.`
@@ -449,8 +461,8 @@ return redirect()->route('entri-surat.cetak', $surat);
 - Struktur: kop instansi, tabel **LEMBAR DISPOSISI**, kotak informasi,
   diteruskan kepada, checkbox tindakan, catatan pimpinan, tanda tangan.
 - Tombol **Cetak** (`window.print()`) dan **Kembali**, disembunyikan saat print.
-- Data yang belum tersedia (tindak lanjut, diteruskan, catatan pimpinan)
-  ditampilkan `-`. Nomor surat diambil dari field `nomor_surat`.
+- **Diteruskan Kepada** diambil dari data surat; jika kosong ditampilkan `-`.
+- Nomor surat diambil dari field `nomor_surat`.
 - Tanda tangan memakai nama Kepala Badan dari proposal (statis).
 
 ### 12.5 Daftar surat
@@ -458,7 +470,7 @@ return redirect()->route('entri-surat.cetak', $surat);
 - URL: `/daftar-surat` (`daftar-surat`)
 - View: `resources/views/daftar-surat.blade.php`
 - Menampilkan surat terbaru lebih dulu (`no_urut` descending), 15 per halaman.
-- Kolom: No. Urut, Jenis Surat, Tgl Terima, No Surat, Aksi (Edit, Cetak).
+- Kolom: No. Urut, Jenis Surat, Tgl Terima, No Surat, Diteruskan Kepada, Aksi (Edit, Cetak).
 - Klik **No. Urut** atau **Edit** untuk membuka form Entri Surat dengan data
   surat tersebut sudah terisi.
 - Jenis surat diisi otomatis "Surat Masuk" karena form entri saat ini khusus
@@ -476,9 +488,8 @@ return redirect()->route('entri-surat.cetak', $surat);
 - Fitur **edit** surat tersedia lewat tautan No. Urut/Edit di daftar surat.
   Fitur **hapus data** dari database belum ada; tombol Hapus pada mode tambah
   hanya mengosongkan form.
-- Halaman cetak baru menampilkan data yang tersedia. Field **tindak lanjut**,
-  **diteruskan kepada**, dan **catatan pimpinan** belum ada di
-  form/database sehingga ditampilkan `-`.
+- Halaman cetak menampilkan data disposisi yang tersedia. Field yang belum
+  diisi ditampilkan `-` / checkbox kosong.
 - Print belum otomatis saat halaman dibuka; gunakan tombol **Cetak** atau
   `Ctrl + P`.
 - Data uji coba pernah dimasukkan ke tabel `entri_surat`.

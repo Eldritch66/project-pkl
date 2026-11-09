@@ -84,6 +84,9 @@
             height: 10px;
             margin-right: 6px;
             border: 1px solid #000;
+            text-align: center;
+            line-height: 9px;
+            font-size: 9px;
         }
 
         .ttd {
@@ -167,7 +170,7 @@
     @endif
 
     <div class="toolbar no-print">
-        <a href="{{ route('entri-surat') }}">Kembali</a>
+        <a href="{{ route('disposisi.index') }}">Kembali</a>
         <button type="button" onclick="window.print()">Cetak</button>
     </div>
 
@@ -223,7 +226,7 @@
             <tr>
                 <td colspan="2" class="box">
                     <b>Diteruskan Kepada :</b><br>
-                    -
+                    {{ $surat->diteruskan_kepada ?: '-' }}
                 </td>
                 <td>
                     <b>Dengan hormat mohon :</b><br>

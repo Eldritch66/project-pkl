@@ -31,6 +31,7 @@ class EntriSurat extends Model
         'kelompok_surat',
         'kode_berkas',
         'nama_berkas',
+        'diteruskan_kepada',
     ];
 
     protected $casts = [

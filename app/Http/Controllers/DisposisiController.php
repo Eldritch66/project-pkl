@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
-class EntriSuratController extends Controller
+class DisposisiController extends Controller
 {
     public function index(Request $request)
     {
@@ -20,7 +20,7 @@ class EntriSuratController extends Controller
         $jumlahSurat = EntriSurat::count();
         $klasifikasi = Klasifikasi::orderBy('kode')->get(['kode', 'nama']);
 
-        return view('entri-surat', [
+        return view('disposisi.form', [
             'surat' => $surat,
             'nextNoUrut' => $nextNoUrut,
             'jumlahSurat' => $jumlahSurat,
@@ -32,14 +32,14 @@ class EntriSuratController extends Controller
     {
         $surat = EntriSurat::orderByDesc('no_urut')->paginate(15);
 
-        return view('daftar-surat', [
+        return view('daftar-surat.index', [
             'surat' => $surat,
         ]);
     }
 
     public function cetak(EntriSurat $entriSurat)
     {
-        return view('entri-surat-cetak', [
+        return view('disposisi.cetak', [
             'surat' => $entriSurat,
         ]);
     }
@@ -59,7 +59,7 @@ class EntriSuratController extends Controller
         });
 
         return redirect()
-            ->route('entri-surat.cetak', $surat)
+            ->route('disposisi.cetak', $surat)
             ->with('success', 'Surat nomor urut '.$surat->no_urut.' berhasil disimpan.');
     }
 
@@ -74,7 +74,7 @@ class EntriSuratController extends Controller
         $entriSurat->update($data);
 
         return redirect()
-            ->route('entri-surat', ['surat' => $entriSurat->id])
+            ->route('disposisi.index', ['surat' => $entriSurat->id])
             ->with('success', 'Surat nomor urut '.$entriSurat->no_urut.' berhasil diperbarui.');
     }
 
@@ -98,6 +98,7 @@ class EntriSuratController extends Controller
             'kelompok_surat' => ['required', 'in:berita_acara,biasa,cuti,instruksi,naskah_perjanjian_hibah_daerah,proposal,surat_edaran'],
             'kode_berkas' => ['required', 'digits_between:1,4'],
             'nama_berkas' => ['required', 'string', 'max:255'],
+            'diteruskan_kepada' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

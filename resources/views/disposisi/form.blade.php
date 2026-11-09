@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
-@section('title', isset($surat) ? 'Edit Surat' : 'Entri Surat')
+@section('title', isset($surat) ? 'Edit Disposisi — SIMARDI' : 'Disposisi — SIMARDI')
 
 @section('content')
+    <a href="{{ route('home') }}" class="back-link">&larr; Kembali ke Beranda</a>
+
     @php
         $nilai = fn (string $field, $default = '') => old($field, $surat?->{$field} ?? $default);
         $tanggal = fn (string $field) => old($field, $surat?->{$field}?->format('Y-m-d'));
@@ -10,18 +12,18 @@
 
     <div class="card">
         <div class="card-header">
-            <h2>{{ $surat ? 'Edit Identitas Surat' : 'Identitas Surat' }}</h2>
+            <div>
+                <h2>{{ $surat ? 'Edit Identitas Surat' : 'Identitas Surat' }}</h2>
+                <p class="card-subtitle">Entri surat masuk dan data disposisi.</p>
+            </div>
             <div class="header-actions">
                 <span class="badge-count">Jumlah Surat: {{ $jumlahSurat }}</span>
                 <a href="{{ route('daftar-surat') }}" class="link-lihat">Lihat Surat</a>
             </div>
         </div>
 
-        @if (session('success'))
-            <div class="alert-success">{{ session('success') }}</div>
-        @endif
-
-        <form method="POST" id="form-entri-surat" action="{{ $surat ? route('entri-surat.update', $surat) : route('entri-surat.store') }}">
+        <form method="POST" id="form-disposisi"
+            action="{{ $surat ? route('disposisi.update', $surat) : route('disposisi.store') }}">
             @csrf
             @if ($surat)
                 @method('PUT')
@@ -193,11 +195,19 @@
                         <span class="form-error">{{ $message }}</span>
                     @enderror
                 </div>
+
+                <div class="form-group full">
+                    <label for="diteruskan_kepada">Diteruskan Kepada</label>
+                    <input type="text" id="diteruskan_kepada" name="diteruskan_kepada" value="{{ $nilai('diteruskan_kepada') }}" maxlength="255" placeholder="Contoh: Kabid Politik Dalam Negeri">
+                    @error('diteruskan_kepada')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn-primary">{{ $surat ? 'Simpan Perubahan' : 'Simpan' }}</button>
-                <a href="{{ $surat ? route('daftar-surat') : route('entri-surat') }}" class="btn-secondary">Batal</a>
+                <a href="{{ $surat ? route('daftar-surat') : route('disposisi.index') }}" class="btn-secondary">Batal</a>
                 @unless ($surat)
                     <button type="button" class="btn-danger" id="btn-hapus">Hapus</button>
                 @endunless
@@ -214,7 +224,7 @@
                 petaKlasifikasi[item.kode] = item.nama;
             });
 
-            const form = document.getElementById('form-entri-surat');
+            const form = document.getElementById('form-disposisi');
             const inputKode = document.getElementById('klasifikasi_kode');
             const inputNama = document.getElementById('klasifikasi_nama');
             const info = document.getElementById('klasifikasi_info');

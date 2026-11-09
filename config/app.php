@@ -13,9 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
-
-    'site_password' => env('SITE_PASSWORD', 'admin123'),
+    'name' => env('APP_NAME', 'SIMARDI'),
 
     /*
     |--------------------------------------------------------------------------
