@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply flex min-h-screen flex-col bg-slate-100 text-slate-800 antialiased;
+    }
+
+    main {
+        @apply flex-1 py-7 pb-12;
+    }
+
+    h2 {
+        @apply mt-0 text-primary;
+    }
+
+    p {
+        @apply leading-relaxed;
+    }
+}
+
+@layer components {
+    /* ---------- Kerangka halaman ---------- */
+
+    .container {
+        @apply mx-auto w-[92%] max-w-[1080px];
+    }
+
+    .header-inner {
+        @apply flex items-center justify-between gap-5 py-3.5 max-[940px]:flex-col max-[940px]:items-start max-[940px]:gap-2.5;
+    }
+
+    .brand {
+        @apply block text-white no-underline;
+    }
+
+    .brand h1 {
+        @apply m-0 text-[1.15rem] tracking-wide;
+    }
+
+    .brand p {
+        @apply mb-0 mt-1 text-[.78rem] text-white/80;
+    }
+
+    .site-nav {
+        @apply flex flex-wrap items-center gap-1 max-[940px]:w-full;
+    }
+
+    .nav-link {
+        @apply whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-white/80 no-underline hover:bg-white/10 hover:text-white;
+    }
+
+    .nav-link.is-active {
+        @apply bg-white/20 text-white;
+    }
+
+    .nav-sep {
+        @apply mx-1.5 h-[22px] w-px bg-white/25 max-[720px]:hidden;
+    }
+
+    .nav-user {
+        @apply max-w-[160px] truncate px-1 text-sm font-semibold text-white;
+    }
+
+    .nav-logout {
+        @apply inline-flex;
+    }
+
+    .nav-btn {
+        @apply rounded-lg border border-white/70 bg-white px-4 py-2 text-sm font-semibold text-primary no-underline hover:bg-slate-100;
+    }
+
+    .site-footer {
+        @apply bg-[#0b3a63] py-5 text-[.82rem] text-white/80;
+    }
+
+    .site-footer .container {
+        @apply flex flex-wrap items-center justify-between gap-2;
+    }
+
+    .site-footer p {
+        @apply m-0 leading-snug;
+    }
+
+    /* ---------- Tautan kembali ---------- */
+
+    .back-link {
+        @apply mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary no-underline hover:underline;
+    }
+
+    /* ---------- Kartu umum ---------- */
+
+    .card {
+        @apply rounded-xl border border-slate-200 bg-white p-6;
+    }
+
+    /* ---------- Form ---------- */
+
+    .form-grid {
+        @apply grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2;
+    }
+
+    .form-group {
+        @apply flex flex-col gap-1.5;
+    }
+
+    .form-group.full {
+        @apply md:col-span-2;
+    }
+
+    .form-group label {
+        @apply text-sm font-semibold text-slate-700;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15;
+    }
+
+    .form-group textarea {
+        @apply min-h-[160px] resize-y font-sans leading-normal;
+    }
+
+    .form-group input[readonly] {
+        @apply bg-slate-100 text-slate-500;
+    }
+
+    .input-row {
+        @apply flex gap-2.5;
+    }
+
+    .input-row input[type="number"],
+    .input-row input.kode {
+        @apply flex-none basis-[120px];
+    }
+
+    .input-row input[type="text"],
+    .input-row select {
+        @apply flex-1;
+    }
+
+    .form-hint {
+        @apply text-xs text-slate-500;
+    }
+
+    .form-error {
+        @apply text-xs text-red-700;
+    }
+
+    .card-header {
+        @apply mb-[18px] flex items-center justify-between gap-3 max-md:flex-col max-md:items-start;
+    }
+
+    .card-header h2 {
+        @apply m-0;
+    }
+
+    .card-subtitle {
+        @apply mb-0 mt-1 text-sm text-slate-500;
+    }
+
+    .header-actions {
+        @apply flex flex-col items-end gap-2 max-md:items-start;
+    }
+
+    .badge-count {
+        @apply whitespace-nowrap rounded-full border border-[#c7d9ea] bg-primary-light px-3.5 py-1.5 text-sm font-semibold text-primary;
+    }
+
+    .link-lihat {
+        @apply text-sm font-semibold text-primary no-underline hover:underline;
+    }
+
+    .form-actions {
+        @apply mt-6 flex justify-end gap-2.5;
+    }
+
+    .form-actions.start {
+        @apply justify-start;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        @apply inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold no-underline;
+    }
+
+    .btn-primary {
+        @apply border border-primary bg-primary text-white hover:bg-primary-dark;
+    }
+
+    .btn-secondary {
+        @apply border border-primary bg-white text-primary hover:bg-slate-100;
+    }
+
+    .btn-danger {
+        @apply border border-red-300 bg-white text-red-700 hover:bg-red-50;
+    }
+
+    /* ---------- Tabel ---------- */
+
+    .table-wrap {
+        @apply overflow-x-auto;
+    }
+
+    table.data {
+        @apply w-full border-collapse text-sm;
+    }
+
+    table.data th,
+    table.data td {
+        @apply border-b border-slate-200 px-3 py-2.5 text-left align-top;
+    }
+
+    table.data th {
+        @apply whitespace-nowrap bg-slate-100 text-xs uppercase tracking-wide text-slate-700;
+    }
+
+    table.data tbody tr:hover td {
+        @apply bg-slate-50;
+    }
+
+    table.data td.nowrap {
+        @apply whitespace-nowrap;
+    }
+
+    .table-action {
+        @apply font-semibold text-primary no-underline hover:underline;
+    }
+
+    .action-sep {
+        @apply mx-1.5 text-slate-400;
+    }
+
+    .empty-state {
+        @apply p-8 text-center text-slate-500;
+    }
+
+    .pagination {
+        @apply mt-4 flex items-center justify-end gap-3.5 text-sm;
+    }
+
+    .pagination a {
+        @apply font-semibold text-primary no-underline hover:underline;
+    }
+
+    /* ---------- Notifikasi & status ---------- */
+
+    .alert-success,
+    .alert-error {
+        @apply mb-[18px] rounded-lg px-3.5 py-3 text-sm;
+    }
+
+    .alert-success {
+        @apply border border-emerald-200 bg-emerald-50 text-emerald-700;
+    }
+
+    .alert-error {
+        @apply border border-red-200 bg-red-50 text-red-700;
+    }
+
+    .status-badge {
+        @apply inline-block rounded-full bg-primary-light px-2.5 py-0.5 text-xs font-semibold capitalize text-primary;
+    }
+
+    /* ---------- Upload SK ---------- */
+
+    .upload-form {
+        @apply max-w-[560px];
+    }
+
+    .upload-form input[type="file"] {
+        @apply bg-slate-50 px-3 py-2;
+    }
+
+    .upload-form .form-actions {
+        @apply justify-start;
+    }
+
+    /* ---------- Komponen kartu menu (opsional) ---------- */
+
+    .menu-column {
+        @apply flex flex-col gap-3.5;
+    }
+
+    .menu-card {
+        @apply flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 text-inherit no-underline transition hover:-translate-y-px hover:border-[#b9cfe3] hover:shadow-lg;
+    }
+
+    .menu-number {
+        @apply flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full bg-primary-light font-bold text-primary;
+    }
+
+    .menu-body {
+        @apply flex flex-1 flex-col gap-1;
+    }
+
+    .menu-title {
+        @apply text-base font-bold text-slate-900;
+    }
+
+    .menu-desc {
+        @apply text-sm leading-snug text-slate-500;
+    }
+
+    .menu-badge {
+        @apply mt-1 self-start rounded-full bg-primary-light px-2 py-0.5 text-xs font-bold text-primary;
+    }
+
+    .menu-arrow {
+        @apply self-center text-xl text-primary;
+    }
+
+    .menu-card.is-locked {
+        @apply cursor-not-allowed bg-slate-50;
+    }
+
+    .menu-card.is-locked .menu-number {
+        @apply bg-slate-200 text-slate-400;
+    }
+
+    .menu-card.is-locked .menu-title {
+        @apply text-slate-500;
+    }
+
+    .menu-locked-note {
+        @apply mt-0.5 text-xs text-slate-400;
+    }
+}

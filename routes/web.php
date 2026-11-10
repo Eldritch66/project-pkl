@@ -6,6 +6,7 @@ use App\Http\Controllers\SkController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'bakesbangpol')->name('home');
+Route::view('/buat-surat', 'buat-surat')->name('buat-surat');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login');
